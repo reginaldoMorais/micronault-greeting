@@ -44,6 +44,6 @@ public class GreetingRepositoryImpl implements GreetingRepository {
     private MongoCollection<Greeting> getCollection() {
         return mongoClient
             .getDatabase("main")
-            .getCollection("hello", Greeting.class);
+            .getCollection("greeting", Greeting.class);
     }
 }

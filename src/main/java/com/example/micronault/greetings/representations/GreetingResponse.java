@@ -5,17 +5,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder;
+
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-@Schema(name = "GreetingRequest", description = "Greeting payload")
+@Schema(name = "GreetingResponse", description = "Greeting payload")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(setterPrefix = "with")
 @Introspected
-public class GreetingRequest {
+public class GreetingResponse {
 
-    @Schema(description = "Value of greeting", minLength = 2, required = true)
-    @NotNull
+    @Schema(description = "Indentification of greeting")
+    private UUID id;
+
+    @Schema(description = "Value of greeting")
     private String greeting;
 }

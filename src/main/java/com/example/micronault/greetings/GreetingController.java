@@ -3,6 +3,7 @@ package com.example.micronault.greetings;
 import com.example.micronault.greetings.exceptions.GreetingNotFoundException;
 import com.example.micronault.greetings.models.Greeting;
 import com.example.micronault.greetings.representations.GreetingRequest;
+import com.example.micronault.greetings.representations.GreetingResponse;
 import com.example.micronault.greetings.services.GreetingService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -34,10 +35,10 @@ public class GreetingController {
         responseCode = "200",
         description = "Ok",
         content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            array = @ArraySchema(schema = @Schema(implementation = Greeting.class))))
+            array = @ArraySchema(schema = @Schema(implementation = GreetingResponse.class))))
     @Tag(name = "greetings")
     @Get
-    public HttpResponse<List<Greeting>> list() {
+    public HttpResponse<List<GreetingResponse>> list() {
 
         log.info("Getting a list of Greetings");
         return HttpResponse.ok(greetingService.list());
@@ -49,19 +50,19 @@ public class GreetingController {
             responseCode = "200",
             description = "Ok",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                schema = @Schema(implementation = Greeting.class))),
+                schema = @Schema(implementation = GreetingResponse.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "404", description = "Greeting not found")
     })
     @Tag(name = "greetings")
     @Get("/{id}")
-    public HttpResponse<Greeting> get(
+    public HttpResponse<GreetingResponse> get(
         @Parameter(description = "Identification of greeting", required = true) final String id) {
 
         log.info("Getting a Greeting id: [{}]", id);
         try {
-            Greeting greeting = greetingService.get(id);
-            return HttpResponse.ok(greeting);
+            GreetingResponse greetings = greetingService.get(id);
+            return HttpResponse.ok(greetings);
         } catch (GreetingNotFoundException e) {
             return HttpResponse.notFound();
         }
@@ -74,19 +75,19 @@ public class GreetingController {
             responseCode = "201",
             description = "Greeting created",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
-                schema = @Schema(implementation = Greeting.class))),
+                schema = @Schema(implementation = GreetingResponse.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "404", description = "Greeting not found")
     })
     @Tag(name = "greetings")
     @Post
-    public HttpResponse<Greeting> post(
+    public HttpResponse<GreetingResponse> post(
         @RequestBody(description = "Payload of Greeting", required = true)
         @Body @Valid final GreetingRequest request) {
 
         log.info("Creating a new Greeting: [{}]", request);
-        Greeting greeting = greetingService.create(request);
-        return HttpResponse.created(greeting);
+        GreetingResponse greetings = greetingService.create(request);
+        return HttpResponse.created(greetings);
     }
 
     @Operation(summary = "Delete a greeting", description = "Delete a greeting")
