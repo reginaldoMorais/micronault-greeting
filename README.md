@@ -17,7 +17,7 @@ Study of a Micronaut applications with MongoDB
 
 ## Requirements
 
-- JDK 15.
+- JDK 11.
 - Docker.
   - MongoDB Docker image.
 
