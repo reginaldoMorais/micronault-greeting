@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(setterPrefix = "with")
 @Introspected
-public class Greeting implements Resource {
+public class Greeting {
 
     private String id;
 
