@@ -5,6 +5,8 @@ import com.example.micronault.greetings.models.Greeting;
 import com.example.micronault.greetings.repositories.GreetingRepository;
 import com.example.micronault.greetings.representations.GreetingRequest;
 import com.example.micronault.greetings.representations.GreetingResponse;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,15 +20,17 @@ public class GreetingServiceImpl implements GreetingService {
     @Inject
     private GreetingRepository greetingRepository;
 
-    public List<GreetingResponse> list() {
-        List<Greeting> greetings = greetingRepository.findAll();
+    public Page<GreetingResponse> list(final Pageable pageable) {
+        Page<Greeting> greetings = greetingRepository.findAll(pageable);
 
-        return greetings.stream()
+        List<GreetingResponse> greetingResponses = greetings.getContent().stream()
             .map(greeting -> GreetingResponse.builder()
                 .withId(UUID.fromString(greeting.getId()))
                 .withGreeting(greeting.getGreeting())
                 .build())
             .collect(Collectors.toList());
+
+         return Page.of(greetingResponses, pageable, greetings.getTotalSize());
     }
 
     @Override
