@@ -1,13 +1,15 @@
 package com.example.micronault.greetings.services;
 
-import com.example.micronault.greetings.representations.GreetingResponse;
 import com.example.micronault.greetings.representations.GreetingRequest;
+import com.example.micronault.greetings.representations.GreetingResponse;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 
 import java.util.List;
 
 public interface GreetingService {
 
-    List<GreetingResponse> list();
+    Page<GreetingResponse> list(Pageable pageable);
 
     GreetingResponse get(String id);
 

@@ -1,10 +1,11 @@
 package com.example.micronault.greetings;
 
 import com.example.micronault.greetings.exceptions.GreetingNotFoundException;
-import com.example.micronault.greetings.models.Greeting;
 import com.example.micronault.greetings.representations.GreetingRequest;
 import com.example.micronault.greetings.representations.GreetingResponse;
 import com.example.micronault.greetings.services.GreetingService;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
@@ -38,10 +39,10 @@ public class GreetingController {
             array = @ArraySchema(schema = @Schema(implementation = GreetingResponse.class))))
     @Tag(name = "greetings")
     @Get
-    public HttpResponse<List<GreetingResponse>> list() {
+    public HttpResponse<Page<GreetingResponse>> list(final Pageable pageable) {
 
         log.info("Getting a list of Greetings");
-        return HttpResponse.ok(greetingService.list());
+        return HttpResponse.ok(greetingService.list(pageable));
     }
 
     @Operation(summary = "Search by id of greeting", description = "Returns a greeting")
