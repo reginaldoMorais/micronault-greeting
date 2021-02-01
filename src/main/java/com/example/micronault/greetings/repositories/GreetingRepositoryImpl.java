@@ -38,7 +38,7 @@ public class GreetingRepositoryImpl implements GreetingRepository {
         List<Greeting> greetings = greetingCollection.find()
             .skip(skips)
             .limit(pageable.getSize())
-            .sort(new BsonDocument("greeting", new BsonInt64(sort(pageable))))
+            .sort(new BsonDocument("createdAt", new BsonInt64(sort(pageable))))
             .into(new ArrayList<>());
 
         return Page.of(greetings, pageable, totalSize);

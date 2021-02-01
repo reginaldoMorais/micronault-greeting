@@ -10,6 +10,7 @@ import io.micronaut.data.model.Pageable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class GreetingServiceImpl implements GreetingService {
             .map(greeting -> GreetingResponse.builder()
                 .withId(UUID.fromString(greeting.getId()))
                 .withGreeting(greeting.getGreeting())
+                .withCreatedAt(greeting.getCreatedAt())
                 .build())
             .collect(Collectors.toList());
 
@@ -40,6 +42,7 @@ public class GreetingServiceImpl implements GreetingService {
         return GreetingResponse.builder()
             .withId(UUID.fromString(greeting.getId()))
             .withGreeting(greeting.getGreeting())
+            .withCreatedAt(greeting.getCreatedAt())
             .build();
     }
 
@@ -48,6 +51,7 @@ public class GreetingServiceImpl implements GreetingService {
         Greeting greeting = Greeting.builder()
             .withId(UUID.randomUUID().toString())
             .withGreeting(greetingRequest.getGreeting())
+            .withCreatedAt(Instant.now())
             .build();
 
         greetingRepository.save(greeting);
@@ -55,6 +59,7 @@ public class GreetingServiceImpl implements GreetingService {
         return GreetingResponse.builder()
             .withId(UUID.fromString(greeting.getId()))
             .withGreeting(greeting.getGreeting())
+            .withCreatedAt(greeting.getCreatedAt())
             .build();
     }
 
