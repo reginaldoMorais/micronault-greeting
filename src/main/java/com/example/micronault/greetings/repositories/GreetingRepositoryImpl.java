@@ -38,7 +38,7 @@ public class GreetingRepositoryImpl implements GreetingRepository {
         List<Greeting> greetings = greetingCollection.find()
             .skip(skips)
             .limit(pageable.getSize())
-            .sort(new BsonDocument("createdAt", new BsonInt64(sort(pageable))))
+            .sort(new BsonDocument(sort(pageable), new BsonInt64(direction(pageable))))
             .into(new ArrayList<>());
 
         return Page.of(greetings, pageable, totalSize);
@@ -67,13 +67,18 @@ public class GreetingRepositoryImpl implements GreetingRepository {
             .getCollection("greeting", Greeting.class);
     }
 
-    private int sort(final Pageable pageable) {
+    private String sort(final Pageable pageable) {
+        return pageable.getSort().getOrderBy().size() > 0
+            ? pageable.getSort().getOrderBy().get(0).getProperty()
+            : "_id";
+    }
+
+    private int direction(final Pageable pageable) {
         if (pageable.getSort().getOrderBy().size() > 0) {
-            return pageable.getSort().getOrderBy().get(0).getProperty().equals(Sort.Order.Direction.ASC.toString())
+            return pageable.getSort().getOrderBy().get(0).getDirection().equals(Sort.Order.Direction.ASC)
                 ? 1
                 : -1;
         }
-
         return 1;
     }
 }
