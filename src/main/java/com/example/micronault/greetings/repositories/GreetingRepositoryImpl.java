@@ -27,13 +27,9 @@ public class GreetingRepositoryImpl implements GreetingRepository {
 
     @Override
     public Page<Greeting> findAll(final Pageable pageable) {
-
         MongoCollection<Greeting> greetingCollection = getCollection();
-
         int skips = pageable.getSize() * (pageable.getNumber() - 1);
         long totalSize = greetingCollection.countDocuments();
-
-        log.info("===> [{}]", sort(pageable));
 
         List<Greeting> greetings = greetingCollection.find()
             .skip(skips)
@@ -70,7 +66,7 @@ public class GreetingRepositoryImpl implements GreetingRepository {
     private String sort(final Pageable pageable) {
         return pageable.getSort().getOrderBy().size() > 0
             ? pageable.getSort().getOrderBy().get(0).getProperty()
-            : "_id";
+            : "createdAt";
     }
 
     private int direction(final Pageable pageable) {
