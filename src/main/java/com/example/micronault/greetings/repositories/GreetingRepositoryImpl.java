@@ -27,18 +27,14 @@ public class GreetingRepositoryImpl implements GreetingRepository {
 
     @Override
     public Page<Greeting> findAll(final Pageable pageable) {
-
         MongoCollection<Greeting> greetingCollection = getCollection();
-
         int skips = pageable.getSize() * (pageable.getNumber() - 1);
         long totalSize = greetingCollection.countDocuments();
-
-        log.info("===> [{}]", sort(pageable));
 
         List<Greeting> greetings = greetingCollection.find()
             .skip(skips)
             .limit(pageable.getSize())
-            .sort(new BsonDocument("createdAt", new BsonInt64(sort(pageable))))
+            .sort(new BsonDocument(sort(pageable), new BsonInt64(direction(pageable))))
             .into(new ArrayList<>());
 
         return Page.of(greetings, pageable, totalSize);
@@ -67,13 +63,18 @@ public class GreetingRepositoryImpl implements GreetingRepository {
             .getCollection("greeting", Greeting.class);
     }
 
-    private int sort(final Pageable pageable) {
+    private String sort(final Pageable pageable) {
+        return pageable.getSort().getOrderBy().size() > 0
+            ? pageable.getSort().getOrderBy().get(0).getProperty()
+            : "createdAt";
+    }
+
+    private int direction(final Pageable pageable) {
         if (pageable.getSort().getOrderBy().size() > 0) {
-            return pageable.getSort().getOrderBy().get(0).getProperty().equals(Sort.Order.Direction.ASC.toString())
+            return pageable.getSort().getOrderBy().get(0).getDirection().equals(Sort.Order.Direction.ASC)
                 ? 1
                 : -1;
         }
-
         return 1;
     }
 }
